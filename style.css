@@ -1520,3 +1520,70 @@ a.contact-info__value:hover { color: var(--accent-light); }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Founders — About page */
+.founders{position:relative;overflow:hidden;background:var(--bg);border-block:1px solid var(--border)}
+.founders::before{content:'';position:absolute;width:440px;height:440px;right:-220px;top:-220px;border:1px solid rgba(59,130,246,.18);border-radius:50%;pointer-events:none}
+.founders__intro{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);align-items:end;gap:64px}
+.founders__intro p{color:var(--muted);font-size:15px;line-height:1.8;padding-bottom:4px}
+.founders__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.founder-profile{display:grid;grid-template-columns:minmax(190px,.78fr) minmax(0,1.22fr);min-height:520px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:transform .35s var(--ease-out),border-color .35s var(--ease-out)}
+.founder-profile:hover{transform:translateY(-6px);border-color:rgba(59,130,246,.65)}
+.founder-profile__portrait{position:relative;min-height:100%;overflow:hidden;background:var(--bg-3)}
+.founder-profile__portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(10,10,15,.82));pointer-events:none}
+.founder-profile__portrait img{width:100%;height:100%;object-fit:cover;filter:saturate(.65) contrast(1.08);transition:transform .7s var(--ease-out),filter .5s ease}
+.founder-profile:hover .founder-profile__portrait img{transform:scale(1.035);filter:saturate(.9) contrast(1.04)}
+.founder-profile__index,.founder-profile__status{position:absolute;z-index:2;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.founder-profile__index{top:18px;left:18px;color:rgba(255,255,255,.7)}
+.founder-profile__status{bottom:18px;left:18px;display:flex;align-items:center;gap:8px;color:var(--white)}
+.founder-profile__status i{width:6px;height:6px;border-radius:50%;background:var(--accent-light);box-shadow:0 0 12px var(--accent-light)}
+.founder-profile__body{display:flex;flex-direction:column;padding:34px 30px}
+.founder-profile__heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.founder-profile__heading h3{font-family:var(--font-display);color:var(--white);font-size:1.45rem;line-height:1.1;margin-bottom:7px}
+.founder-profile__heading span{color:var(--accent-light);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.founder-profile__heading a{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border:1px solid var(--border);border-radius:50%;color:var(--white);transition:background .25s,border-color .25s,transform .25s}
+.founder-profile__heading a:hover{background:var(--accent);border-color:var(--accent);transform:rotate(10deg)}
+.founder-profile__body>p{color:var(--muted);font-size:13px;line-height:1.75}
+.founder-profile__body .founder-profile__quote{color:var(--white);font-family:var(--font-display);font-size:15px;line-height:1.55;margin:24px 0 16px}
+.founder-profile__skills{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;padding-top:26px}
+.founder-profile__skills span{padding:6px 10px;border:1px solid var(--border);border-radius:100px;color:var(--text-body);font-size:10px;letter-spacing:.04em}
+/* Card composition */
+.founders__grid{grid-template-columns:repeat(2,minmax(0,420px));gap:64px;max-width:none;margin-inline:0;justify-content:space-between}
+.founder-profile{display:flex;flex-direction:column;min-height:0;background:var(--bg-2)}
+.founder-profile__portrait{width:100%;min-height:0;aspect-ratio:16/8;border-bottom:1px solid var(--border)}
+.founder-profile__portrait::before{content:'';position:absolute;inset:18px;border:1px solid rgba(255,255,255,.09);border-radius:calc(var(--r-lg) - 8px);z-index:2;pointer-events:none}
+.founder-profile__portrait img{object-position:center 26%}
+.founder-profile__body{min-height:290px;padding:34px 28px 28px;text-align:left}
+.founder-profile__heading{padding-bottom:18px}
+.founder-profile__heading h3{font-size:1.4rem}
+.founder-profile__body .founder-profile__quote{font-size:14px;max-width:520px;margin:18px 0 12px}
+.founder-profile__skills{margin-top:auto}
+.founder-profile__skills span{background:var(--bg-3);padding:7px 12px}
+@media(max-width:1024px){.founders__grid{grid-template-columns:repeat(2,minmax(0,400px));gap:44px}.founder-profile__body{min-height:310px}}
+@media(max-width:768px){.founders__intro{grid-template-columns:1fr;gap:24px}.founders__grid{grid-template-columns:1fr;gap:26px}.founder-profile__portrait{aspect-ratio:4/3}.founder-profile__body{min-height:0;padding:28px 22px}.founder-profile__skills{margin-top:10px}}
+
+/* Portrait-led founder cards */
+.founders__grid{grid-template-columns:repeat(2,minmax(0,390px));gap:72px;justify-content:space-between}
+.founder-profile{display:block;min-height:0;aspect-ratio:4/5.35;border-radius:28px;background:var(--bg-3);box-shadow:0 24px 70px rgba(0,0,0,.25)}
+.founder-profile__portrait{position:relative;width:100%;height:100%;min-height:0;aspect-ratio:auto;border:0}
+.founder-profile__portrait::before{inset:14px;border-color:rgba(255,255,255,.1);border-radius:20px}
+.founder-profile__portrait::after{background:linear-gradient(180deg,rgba(10,10,15,.02) 38%,rgba(10,10,15,.48) 66%,rgba(10,10,15,.98) 100%)}
+.founder-profile__portrait img{position:absolute;inset:0;width:100%;height:100%;object-position:center top;filter:saturate(.78) contrast(1.04)}
+.founder-profile__index{top:24px;left:24px;padding:7px 10px;border:1px solid rgba(255,255,255,.18);border-radius:100px;background:rgba(10,10,15,.28);backdrop-filter:blur(8px);color:var(--white)}
+.founder-profile__link{position:absolute;z-index:4;top:22px;right:22px;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;color:var(--white);background:rgba(10,10,15,.4);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);transition:background .25s,transform .25s}
+.founder-profile__link:hover{background:var(--accent);transform:rotate(10deg)}
+.founder-profile__overlay{position:absolute;z-index:3;left:0;right:0;bottom:0;padding:34px 32px 32px;text-align:left}
+.founder-profile__role{display:block;color:var(--accent-light);font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+.founder-profile__overlay h3{font-family:var(--font-display);font-size:clamp(1.85rem,3vw,2.5rem);font-weight:700;line-height:1;color:var(--white);letter-spacing:-.035em;text-transform:uppercase;margin-bottom:15px}
+.founder-profile__overlay p{max-width:310px;color:rgba(232,236,245,.75);font-size:12px;line-height:1.65}
+@media(max-width:1024px){.founders__grid{grid-template-columns:repeat(2,minmax(0,360px));gap:40px}.founder-profile{aspect-ratio:4/5.4}}
+@media(max-width:768px){.founders__grid{grid-template-columns:minmax(0,390px);justify-content:center;gap:30px}.founder-profile__portrait{aspect-ratio:auto}.founder-profile__overlay{padding:30px 26px 28px}}
+
+/* Visible profile description panels */
+.founder-profile{display:flex;flex-direction:column;aspect-ratio:auto;overflow:hidden}
+.founder-profile__portrait{height:390px;min-height:390px;aspect-ratio:auto;border-bottom:1px solid var(--border)}
+.founder-profile__portrait::after{background:linear-gradient(180deg,transparent 58%,rgba(10,10,15,.5) 100%)}
+.founder-profile__overlay{position:relative;left:auto;right:auto;bottom:auto;min-height:190px;padding:27px 30px 30px;background:var(--bg-2);border-top:1px solid rgba(255,255,255,.03)}
+.founder-profile__overlay h3{font-size:2rem;margin-bottom:12px}
+.founder-profile__overlay p{max-width:330px;font-size:13px;line-height:1.65}
+@media(max-width:768px){.founder-profile__portrait{height:340px;min-height:340px}.founder-profile__overlay{min-height:180px;padding:25px 24px 27px}}
