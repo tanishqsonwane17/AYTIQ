@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AYTIQ Labs — Intelligent Digital Experiences</title>
   <meta name="description" content="AYTIQ Labs creates scalable software, web platforms, AI solutions, and digital products that help businesses grow." />
+  <meta name="theme-color" content="#0A0A0F" id="themeColorMeta" />
+
+  <script>
+    /* Apply the saved/system theme before paint to prevent a bright flash. */
+    (() => {
+      try {
+        const saved = localStorage.getItem('aytiq-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = saved || (systemDark ? 'dark' : 'light');
+      } catch (_) {}
+    })();
+  </script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -45,6 +57,17 @@
       </ul>
 
       <a href="#contact" class="btn btn--outline nav__cta magnetic">Start a Project</a>
+
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" aria-pressed="false" title="Switch color theme">
+        <!-- Moon icon (shown in dark mode) -->
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+        <!-- Sun icon (shown in light mode) -->
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 110 10A5 5 0 0112 7z"/>
+        </svg>
+      </button>
 
       <button class="nav__hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -433,32 +456,32 @@
         </div>
         <div class="team__grid">
           <div class="team-card reveal-up" data-delay="0">
-            <div class="team-card__avatar" style="background:#1a1a2e">
-              <span>AK</span>
+            <div class="team-card__avatar">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=800&amp;q=85" alt="Ayaan Khan, Founder and Lead Engineer" loading="lazy" width="800" height="800" />
             </div>
             <h4>Ayaan Khan</h4>
             <span class="team-card__role">Founder & Lead Engineer</span>
             <p>Full-stack architect with expertise in distributed systems and AI integration.</p>
           </div>
           <div class="team-card reveal-up" data-delay="0.15">
-            <div class="team-card__avatar" style="background:#111827">
-              <span>ZR</span>
+            <div class="team-card__avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;w=800&amp;q=85" alt="Zara Rahman, Head of Design" loading="lazy" width="800" height="800" />
             </div>
             <h4>Zara Rahman</h4>
             <span class="team-card__role">Head of Design</span>
             <p>Award-winning UI/UX designer who turns complex ideas into elegant interfaces.</p>
           </div>
           <div class="team-card reveal-up" data-delay="0.3">
-            <div class="team-card__avatar" style="background:#0f172a">
-              <span>TP</span>
+            <div class="team-card__avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=800&amp;q=85" alt="Tariq Patel, AI and Machine Learning Engineer" loading="lazy" width="800" height="800" />
             </div>
             <h4>Tariq Patel</h4>
             <span class="team-card__role">AI/ML Engineer</span>
             <p>Machine learning specialist with deep expertise in NLP and computer vision.</p>
           </div>
           <div class="team-card reveal-up" data-delay="0.45">
-            <div class="team-card__avatar" style="background:#18181b">
-              <span>NS</span>
+            <div class="team-card__avatar">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=800&amp;q=85" alt="Nina Soto, Mobile Lead" loading="lazy" width="800" height="800" />
             </div>
             <h4>Nina Soto</h4>
             <span class="team-card__role">Mobile Lead</span>

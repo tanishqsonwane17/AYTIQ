@@ -152,6 +152,13 @@ function initHeroScene() {
   }
   animate();
 
+  // Register materials for theme switching
+  registerHeroMaterials(ico, innerIco, innerWire, particles);
+
+  // Apply current theme to hero on init
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  updateHeroSceneTheme(currentTheme);
+
   // Pause when not on home page to save resources
   document.addEventListener('pageChange', (e) => {
     if (e.detail === 'home') {
@@ -598,6 +605,86 @@ function initScrollTriggers() {
 }
 
 /* ─────────────────────────────────────────────────
+   THEME TOGGLE (Dark / Light)
+───────────────────────────────────────────────── */
+function initThemeToggle() {
+  const btn  = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  const themeMeta = document.getElementById('themeColorMeta');
+
+  const syncThemeUI = theme => {
+    const isLight = theme === 'light';
+    html.style.colorScheme = theme;
+    if (themeMeta) themeMeta.setAttribute('content', isLight ? '#F8F8FC' : '#0A0A0F');
+    if (btn) {
+      btn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+      btn.setAttribute('aria-pressed', String(isLight));
+      btn.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
+    }
+  };
+
+  // Load saved preference or detect system preference
+  const saved = localStorage.getItem('aytiq-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initial = saved || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', initial);
+  syncThemeUI(initial);
+
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next    = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('aytiq-theme', next);
+    syncThemeUI(next);
+
+    // Update Three.js hero scene colors if active
+    updateHeroSceneTheme(next);
+  });
+
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('aytiq-theme')) {
+      const theme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', theme);
+      syncThemeUI(theme);
+      updateHeroSceneTheme(theme);
+    }
+  });
+}
+
+// Update Three.js materials when theme changes
+let _heroMaterials = null;
+function registerHeroMaterials(ico, innerIco, innerWire, particles) {
+  _heroMaterials = { ico, innerIco, innerWire, particles };
+}
+
+function updateHeroSceneTheme(theme) {
+  if (!_heroMaterials) return;
+  const { ico, innerIco, innerWire, particles } = _heroMaterials;
+  if (theme === 'light') {
+    ico.material.color.setHex(0x2563EB);
+    ico.material.opacity = 0.18;
+    innerIco.material.color.setHex(0xE8E8F4);
+    innerIco.material.opacity = 0.95;
+    innerWire.material.color.setHex(0x1D4ED8);
+    innerWire.material.opacity = 0.45;
+    particles.material.color.setHex(0x2563EB);
+    particles.material.opacity = 0.35;
+  } else {
+    ico.material.color.setHex(0x2563EB);
+    ico.material.opacity = 0.25;
+    innerIco.material.color.setHex(0x1a1a2e);
+    innerIco.material.opacity = 0.9;
+    innerWire.material.color.setHex(0x3B82F6);
+    innerWire.material.opacity = 0.6;
+    particles.material.color.setHex(0x3B82F6);
+    particles.material.opacity = 0.5;
+  }
+}
+
+/* ─────────────────────────────────────────────────
    INIT ALL
 ───────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -605,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger);
 
   // Core
+  initThemeToggle();
   initLenis();
   initNavbar();
   initNavigation();

@@ -34,10 +34,81 @@
   --dur:         0.55s;
 }
 
+/* ─── LIGHT MODE TOKENS ─────────────────────────── */
+[data-theme="light"] {
+  --bg:          #F8F8FC;
+  --bg-2:        #FFFFFF;
+  --bg-3:        #F0F0F8;
+  --bg-4:        #E8E8F4;
+  --white:       #0A0A0F;
+  --off-white:   #1A1A2E;
+  --muted:       #4B5563;
+  --subtle:      #D1D5DB;
+  --border:      #E2E4EF;
+  --accent:      #2563EB;
+  --accent-dim:  #1D4ED8;
+  --accent-light:#1D4ED8;
+  --text-body:   #374151;
+  --text-dim:    #9CA3AF;
+}
+
+[data-theme="light"] .nav.scrolled {
+  background: rgba(248,248,252,0.88);
+}
+
+[data-theme="light"] .mobile-menu {
+  background: var(--bg);
+}
+
+[data-theme="light"] .hero {
+  background: var(--bg);
+}
+
+[data-theme="light"] #heroCanvas {
+  opacity: 0.55;
+}
+
+[data-theme="light"] .work-item__overlay,
+[data-theme="light"] .portfolio-item__overlay {
+  background: rgba(248,248,252,0.82);
+}
+
+[data-theme="light"] .work-item__view {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+[data-theme="light"] .portfolio-item__open {
+  color: #0A0A0F;
+  border-color: #0A0A0F;
+}
+
+[data-theme="light"] .modal__overlay {
+  background: rgba(10,10,15,0.6);
+}
+
+[data-theme="light"] .work-item__tags span,
+[data-theme="light"] .portfolio-item__tags span {
+  background: var(--bg-2);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--subtle); }
+
+[data-theme="light"] .cursor {
+  background: var(--accent);
+}
+[data-theme="light"] .cursor-follower {
+  border-color: rgba(37,99,235,0.4);
+}
+[data-theme="light"] .cursor.cursor--hover { background: #0A0A0F; }
+[data-theme="light"] .cursor-follower.cursor--hover { border-color: #0A0A0F; }
+
 /* ─── RESET ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: auto; font-size: 16px; }
+html { scroll-behavior: auto; font-size: 16px; color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; }
 
 body {
   font-family: var(--font-body);
@@ -879,6 +950,20 @@ em { font-style: normal; color: var(--accent-light); }
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  background: var(--bg-3);
+}
+.team-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: saturate(.75) contrast(1.04);
+  transition: transform .55s var(--ease-out), filter .35s ease;
+}
+.team-card:hover .team-card__avatar img {
+  transform: scale(1.045);
+  filter: saturate(1) contrast(1.02);
 }
 .team-card__avatar span {
   font-family: var(--font-display);
@@ -1511,6 +1596,83 @@ a.contact-info__value:hover { color: var(--accent-light); }
   .why-us__pillars { grid-template-columns: 1fr; }
   .modal__content { padding: 28px 20px; }
   .modal__stats { flex-wrap: wrap; gap: 20px; }
+}
+
+/* ─── THEME TOGGLE ───────────────────────────────── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-3);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.theme-toggle:hover {
+  border-color: var(--accent-light);
+  color: var(--accent-light);
+  background: var(--bg-4);
+  transform: scale(1.05);
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  transition: opacity 0.3s, transform 0.4s var(--ease-out);
+}
+.theme-toggle .icon-moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.theme-toggle .icon-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+}
+[data-theme="light"] .theme-toggle .icon-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.6);
+}
+[data-theme="light"] .theme-toggle .icon-sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Smooth color transitions across the whole site */
+body,
+.nav,
+.nav.scrolled,
+.mobile-menu,
+.hero,
+.section-title,
+.service-card,
+.svc-card,
+.pillar,
+.mission__card,
+.testimonial,
+.team-card,
+.contact-form-wrap,
+.contact-info__block,
+.footer,
+.footer__top,
+.modal__content,
+.portfolio-item__thumb,
+.work-item__thumb,
+.process__step,
+.tech__category,
+.story__stat-block,
+.value-item,
+.final-cta__box,
+.filter-btn {
+  transition-property: background, background-color, border-color, color, box-shadow;
+  transition-duration: 0.35s;
+  transition-timing-function: var(--ease-out);
 }
 
 /* ─── REDUCED MOTION ─────────────────────────────── */
