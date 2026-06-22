@@ -1,1048 +1,1468 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AYTIQ Labs — Intelligent Digital Experiences</title>
-  <meta name="description" content="AYTIQ Labs creates scalable software, web platforms, AI solutions, and digital products that help businesses grow." />
-  <meta name="theme-color" content="#0A0A0F" id="themeColorMeta" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AYTIQ Labs — Building Tomorrow's Digital Products</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <script>
-    /* Apply the saved/system theme before paint to prevent a bright flash. */
-    (() => {
-      try {
-        const saved = localStorage.getItem('aytiq-theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = saved || (systemDark ? 'dark' : 'light');
-      } catch (_) {}
-    })();
-  </script>
+/* ── THEME TOKENS ── */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-2: #f8f7f4;
+  --bg-3: #f2f0ec;
+  --ink: #141414;
+  --ink-soft: #484848;
+  --ink-muted: #909090;
+  --accent: #4f46e5;
+  --accent-2: #eef2ff;
+  --accent-3: #818cf8;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
+  --nav-bg: rgba(255,255,255,0.88);
+  --card-bg: #ffffff;
+  --footer-bg: #111111;
+  --footer-text: rgba(255,255,255,0.55);
+  --footer-title: #ffffff;
+  --shadow: 0 12px 40px rgba(0,0,0,0.07);
+  --shadow-hover: 0 20px 60px rgba(0,0,0,0.12);
+  --icon-stroke: #484848;
+  --icon-stroke-accent: #4f46e5;
+  --toggle-bg: #e8e6f0;
+  --toggle-knob: #4f46e5;
+}
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+[data-theme="dark"] {
+  --bg: #0f0f10;
+  --bg-2: #161618;
+  --bg-3: #1c1c1f;
+  --ink: #f0eefc;
+  --ink-soft: #a8a6b8;
+  --ink-muted: #6a6880;
+  --accent: #818cf8;
+  --accent-2: #1e1d35;
+  --accent-3: #4f46e5;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.13);
+  --nav-bg: rgba(15,15,16,0.9);
+  --card-bg: #161618;
+  --footer-bg: #0a0a0b;
+  --footer-text: rgba(255,255,255,0.4);
+  --footer-title: rgba(255,255,255,0.9);
+  --shadow: 0 12px 40px rgba(0,0,0,0.4);
+  --shadow-hover: 0 20px 60px rgba(0,0,0,0.55);
+  --icon-stroke: #a8a6b8;
+  --icon-stroke-accent: #818cf8;
+  --toggle-bg: #2a2840;
+  --toggle-knob: #818cf8;
+}
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+html { scroll-behavior: auto; }
 
-  <!-- Three.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: background 0.35s, color 0.35s;
+}
 
-  <!-- Lenis -->
-  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
 
-  <link rel="stylesheet" href="style.css" />
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 5%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow 0.3s, background 0.35s;
+}
+nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.35s;
+}
+.nav-logo span { color: var(--accent); }
+
+.nav-right { display: flex; align-items: center; gap: 2rem; }
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+/* Theme toggle */
+.theme-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 100px;
+  background: var(--toggle-bg);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--toggle-knob);
+  transition: transform 0.3s, background 0.3s;
+}
+[data-theme="dark"] .theme-toggle::after { transform: translateX(20px); }
+
+.toggle-icons {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  pointer-events: none;
+}
+.toggle-icons svg { width: 11px; height: 11px; }
+
+.nav-cta {
+  padding: 0.5rem 1.25rem;
+  background: var(--ink);
+  color: var(--bg) !important;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, color 0.35s;
+}
+.nav-cta:hover { background: var(--accent); transform: translateY(-1px); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 1.5px; background: var(--ink); border-radius: 2px; transition: all 0.3s; }
+
+/* ── SECTIONS ── */
+section { padding: 110px 5%; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 130px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.35s;
+}
+
+.hero-orb {
+  position: absolute;
+  top: -15%;
+  right: -8%;
+  width: 58%;
+  height: 95%;
+  background: var(--accent-2);
+  border-radius: 40% 60% 60% 40% / 50% 40% 60% 50%;
+  z-index: 0;
+  animation: morphOrb 14s ease-in-out infinite;
+  transition: background 0.35s;
+}
+.hero-orb-2 {
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 35%;
+  height: 60%;
+  background: var(--accent-2);
+  border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%;
+  z-index: 0;
+  opacity: 0.5;
+  animation: morphOrb 18s 3s ease-in-out infinite reverse;
+  transition: background 0.35s;
+}
+
+@keyframes morphOrb {
+  0%, 100% { border-radius: 40% 60% 60% 40% / 50% 40% 60% 50%; }
+  33%  { border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%; }
+  66%  { border-radius: 50% 50% 60% 40% / 60% 40% 50% 50%; }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--accent-2);
+  color: var(--accent);
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1.75rem;
+  border: 1px solid var(--accent-3);
+  border-color: rgba(79,70,229,0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.7s 0.2s forwards;
+}
+
+.badge-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.5); }
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 5.5vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.07;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s 0.4s forwards;
+  transition: color 0.35s;
+}
+h1 em { font-style: normal; color: var(--accent); }
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 480px;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s 0.6s forwards;
+  transition: color 0.35s;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+
+.btn-primary {
+  padding: 0.875rem 2rem;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 100px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+
+.btn-secondary {
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 100px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.2s, color 0.35s, transform 0.2s;
+}
+.btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s 1s forwards;
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  transition: color 0.35s;
+}
+.stat-label { font-size: 0.78rem; color: var(--ink-muted); margin-top: 4px; }
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION HEADERS ── */
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  transition: color 0.35s;
+}
+.section-desc {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  max-width: 520px;
+  margin-bottom: 3.5rem;
+  transition: color 0.35s;
+}
+
+/* ── ABOUT ── */
+#about { background: var(--bg-2); transition: background 0.35s; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.about-visual { position: relative; }
+
+.about-card-main {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 2.5rem;
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+  transition: background 0.35s, border-color 0.35s;
+}
+
+.about-icon-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+.icon-chip {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-2);
+  transition: background 0.35s, border-color 0.35s;
+}
+.icon-chip svg { width: 18px; height: 18px; stroke: var(--icon-stroke-accent); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.about-card-main h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  transition: color 0.35s;
+}
+.about-card-main p { font-size: 0.9rem; color: var(--ink-soft); }
+
+.avatar-row {
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 10px;
+}
+.mini-avatars { display: flex; }
+.mini-av {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-right: -8px;
+  transition: border-color 0.35s;
+}
+.av-a { background: #eef2ff; color: #4338ca; }
+.av-y { background: #e6faf4; color: #0d7e6a; }
+.av-t { background: #fff1ee; color: #c42b1a; }
+.av-i { background: #fffbeb; color: #b45309; }
+
+.about-card-sub {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+  border: 1px solid var(--border);
+  position: absolute;
+  bottom: -2rem;
+  right: -2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  z-index: 2;
+  min-width: 210px;
+  transition: background 0.35s, border-color 0.35s, box-shadow 0.35s;
+}
+.live-dot {
+  width: 9px; height: 9px;
+  background: #22c55e;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 2.5s infinite;
+}
+
+.about-values {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.value-item {
+  padding: 1.25rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: transform 0.25s, box-shadow 0.25s, background 0.35s, border-color 0.35s;
+}
+.value-item:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.value-icon-wrap {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: var(--accent-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+.value-icon-wrap svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.value-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 3px; transition: color 0.35s; }
+.value-desc { font-size: 0.78rem; color: var(--ink-muted); transition: color 0.35s; }
+
+/* ── WORK ── */
+#work { background: var(--bg); transition: background 0.35s; }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.5rem;
+}
+.project-card {
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--card-bg);
+  transition: transform 0.3s, box-shadow 0.3s, background 0.35s, border-color 0.35s;
+  cursor: default;
+}
+.project-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+.project-thumb {
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.project-thumb svg { width: 56px; height: 56px; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.75; }
+.thumb-indigo { background: #eef2ff; }
+.thumb-indigo svg { stroke: #4338ca; }
+.thumb-teal { background: #e6faf4; }
+.thumb-teal svg { stroke: #0d7e6a; }
+.thumb-violet { background: #f3f0ff; }
+.thumb-violet svg { stroke: #6d28d9; }
+.thumb-amber { background: #fffbeb; }
+.thumb-amber svg { stroke: #b45309; }
+
+[data-theme="dark"] .thumb-indigo { background: #1e1d35; }
+[data-theme="dark"] .thumb-teal { background: #0d2520; }
+[data-theme="dark"] .thumb-violet { background: #1f1a30; }
+[data-theme="dark"] .thumb-amber { background: #231a08; }
+
+.project-body { padding: 1.5rem; }
+.project-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--bg-3);
+  border-radius: 100px;
+  font-size: 0.73rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  margin-bottom: 0.7rem;
+  transition: background 0.35s;
+}
+.project-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.45rem;
+  transition: color 0.35s;
+}
+.project-desc { font-size: 0.855rem; color: var(--ink-soft); margin-bottom: 1rem; transition: color 0.35s; }
+.project-link {
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap 0.2s;
+}
+.project-link:hover { gap: 9px; }
+.project-link svg { width: 13px; height: 13px; stroke: var(--accent); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── TEAM ── */
+#team { background: var(--bg-2); transition: background 0.35s; }
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+.team-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.35s, border-color 0.35s;
+}
+.team-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+.team-avatar {
+  width: 78px; height: 78px;
+  border-radius: 50%;
+  margin: 0 auto 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #fff;
+}
+.av-bg-a { background: linear-gradient(135deg, #4f46e5, #818cf8); }
+.av-bg-y { background: linear-gradient(135deg, #0d9488, #34d399); }
+.av-bg-t { background: linear-gradient(135deg, #dc2626, #f87171); }
+.av-bg-i { background: linear-gradient(135deg, #d97706, #fbbf24); }
+
+.team-name { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; transition: color 0.35s; }
+.team-role { font-size: 0.75rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.75rem; }
+.team-bio { font-size: 0.84rem; color: var(--ink-soft); transition: color 0.35s; }
+
+.team-socials { display: flex; gap: 8px; justify-content: center; margin-top: 1.1rem; }
+.social-link {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--bg-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--ink-muted);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  border: 1px solid var(--border);
+}
+.social-link:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+.social-link svg { width: 14px; height: 14px; stroke: var(--icon-stroke); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s; }
+.social-link:hover svg { stroke: #fff; }
+
+/* ── EXPERIENCE ── */
+#experience { background: var(--bg); transition: background 0.35s; }
+
+.exp-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 5rem;
+  align-items: start;
+}
+.exp-sticky { position: sticky; top: 90px; }
+.exp-big-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 5.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent-2);
+  position: relative;
+  transition: color 0.35s;
+}
+.exp-big-num span { color: var(--ink); font-size: 2.5rem; transition: color 0.35s; }
+
+.timeline { position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px; top: 6px; bottom: 0;
+  width: 1px;
+  background: var(--border);
+  transition: background 0.35s;
+}
+
+.timeline-item { display: flex; gap: 2rem; padding-bottom: 2.75rem; position: relative; }
+.timeline-dot {
+  width: 31px; height: 31px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s, background 0.35s;
+}
+.timeline-item:hover .timeline-dot { border-color: var(--accent); background: var(--accent-2); }
+.timeline-dot-inner { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-muted); transition: background 0.3s; }
+.timeline-item:hover .timeline-dot-inner { background: var(--accent); }
+
+.timeline-content { padding-top: 4px; flex: 1; }
+.timeline-year { font-size: 0.73rem; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.05em; margin-bottom: 5px; transition: color 0.35s; }
+.timeline-title { font-family: 'Syne', sans-serif; font-size: 1.02rem; font-weight: 600; color: var(--ink); margin-bottom: 5px; transition: color 0.35s; }
+.timeline-desc { font-size: 0.865rem; color: var(--ink-soft); transition: color 0.35s; }
+
+/* ── SERVICES ── */
+#services { background: var(--bg-2); transition: background 0.35s; }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: 1.5rem;
+}
+.service-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  padding: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.35s, border-color 0.35s;
+}
+.service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.service-num { font-size: 0.72rem; font-weight: 600; color: var(--ink-muted); margin-bottom: 1rem; letter-spacing: 0.06em; }
+.service-icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: 13px;
+  background: var(--accent-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.service-icon-wrap svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.service-title { font-family: 'Syne', sans-serif; font-size: 1.08rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; transition: color 0.35s; }
+.service-desc { font-size: 0.865rem; color: var(--ink-soft); transition: color 0.35s; }
+
+/* ── CONTACT ── */
+#contact { background: var(--bg); transition: background 0.35s; }
+
+.contact-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.2rem 1.3rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 1rem;
+  background: var(--card-bg);
+  transition: border-color 0.2s, background 0.35s;
+}
+.contact-item:hover { border-color: var(--accent); }
+.contact-item-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--accent-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.contact-item-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.contact-item-label { font-size: 0.73rem; color: var(--ink-muted); margin-bottom: 2px; }
+.contact-item-value { font-size: 0.9rem; font-weight: 500; color: var(--ink); transition: color 0.35s; }
+
+.form-group { margin-bottom: 1.2rem; }
+.form-label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); margin-bottom: 6px; transition: color 0.35s; }
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--bg-2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  transition: border-color 0.2s, background 0.35s, color 0.35s;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: var(--accent);
+  background: var(--bg);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+.form-textarea { resize: vertical; min-height: 118px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.94rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, color 0.35s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-submit svg { width: 16px; height: 16px; stroke: var(--bg); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.35s; }
+.btn-submit:hover { background: var(--accent); transform: translateY(-2px); }
+
+.success-msg {
+  display: none;
+  padding: 1rem 1.2rem;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  color: #15803d;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  align-items: center;
+  gap: 10px;
+}
+[data-theme="dark"] .success-msg { background: #0d2117; border-color: #15803d; color: #4ade80; }
+.success-msg.show { display: flex; }
+.success-check { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--footer-bg);
+  padding: 4rem 5%;
+  transition: background 0.35s;
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--footer-title);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 1rem;
+}
+.footer-logo span { color: var(--accent-3); }
+.footer-tagline { font-size: 0.865rem; color: var(--footer-text); max-width: 260px; }
+.footer-col h4 { font-size: 0.72rem; font-weight: 600; color: var(--footer-title); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 0.55rem; }
+.footer-col a { font-size: 0.865rem; color: var(--footer-text); text-decoration: none; transition: color 0.2s; }
+.footer-col a:hover { color: var(--footer-title); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.79rem;
+  color: var(--footer-text);
+}
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── SCROLL PROGRESS ── */
+.scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 200; transition: width 0.1s linear; }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 64px; left: 0; right: 0;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  padding: 1.25rem 5%;
+  border-bottom: 1px solid var(--border);
+  z-index: 99;
+  flex-direction: column;
+  gap: 0;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a { padding: 0.85rem 0; font-size: 1rem; color: var(--ink); text-decoration: none; font-weight: 500; border-bottom: 1px solid var(--border); transition: color 0.35s; }
+.mobile-menu a:last-child { border-bottom: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 920px) {
+  .nav-links { display: none; }
+  .nav-cta-desktop { display: none; }
+  .hamburger { display: flex; }
+  .about-grid, .exp-layout, .contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+  .about-card-sub { position: static; margin-top: 1rem; box-shadow: none; }
+  .exp-sticky { position: static; }
+  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero-stats { gap: 2rem; }
+}
+@media (max-width: 500px) {
+  section { padding: 70px 5%; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .about-values { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════
-       NAVIGATION
-  ═══════════════════════════════════════════════ -->
-  <nav class="nav" id="navbar">
-    <div class="nav__inner">
-      <a href="#home" class="nav__logo" data-page="home">
-        <span class="nav__logo-mark">AY</span>
-        <span class="nav__logo-text">TIQ Labs</span>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">AYTIQ<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <div class="toggle-icons">
+        <!-- Sun -->
+        <svg viewBox="0 0 16 16" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round">
+          <circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/>
+        </svg>
+        <!-- Moon -->
+        <svg viewBox="0 0 16 16" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round">
+          <path d="M13 10A6 6 0 0 1 6 3a6 6 0 1 0 7 7z"/>
+        </svg>
+      </div>
+    </button>
+    <a href="#contact" class="nav-cta nav-cta-desktop">Let's Talk</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">About</a>
+  <a href="#work">Work</a>
+  <a href="#team">Team</a>
+  <a href="#experience">Experience</a>
+  <a href="#services">Services</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb-2"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Innovation Studio
+    </div>
+    <h1>We Build<br /><em>Digital</em><br />Products That Matter</h1>
+    <p class="hero-sub">AYTIQ Labs crafts thoughtful software, sharp design, and intelligent systems — turning complex ideas into elegant, human-centered solutions.</p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">See Our Work
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg>
       </a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">20+</div><div class="stat-label">Projects Shipped</div></div>
+      <div><div class="stat-num">4</div><div class="stat-label">Core Team</div></div>
+      <div><div class="stat-num">3+</div><div class="stat-label">Years Building</div></div>
+    </div>
+  </div>
+</section>
 
-      <ul class="nav__links">
-        <li><a href="#home" class="nav__link active" data-page="home">Home</a></li>
-        <li><a href="#about" class="nav__link" data-page="about">About</a></li>
-        <li><a href="#services" class="nav__link" data-page="services">Services</a></li>
-        <li><a href="#works" class="nav__link" data-page="works">Works</a></li>
-        <li><a href="#contact" class="nav__link" data-page="contact">Contact</a></li>
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="about-card-main reveal">
+        <div class="about-icon-row">
+          <div class="icon-chip">
+            <svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 0 1 9 9c0 3.5-2 6.5-5 8l-1 3H9l-1-3C5 18.5 3 15.5 3 11a9 9 0 0 1 9-9z"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
+          </div>
+          <div class="icon-chip">
+            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="icon-chip">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+        </div>
+        <h3>Built on curiosity.</h3>
+        <p>We started AYTIQ Labs because we believed great software should feel effortless — and look even better than it works.</p>
+        <div class="avatar-row">
+          <div class="mini-avatars">
+            <div class="mini-av av-a">A</div>
+            <div class="mini-av av-y">Y</div>
+            <div class="mini-av av-t">T</div>
+            <div class="mini-av av-i">I</div>
+          </div>
+          <span style="font-size:0.78rem;color:var(--ink-muted);padding-left:16px;">4 minds, one lab.</span>
+        </div>
+      </div>
+      <div class="about-card-sub reveal reveal-delay-2">
+        <div class="live-dot"></div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;color:var(--ink);transition:color 0.35s;">Currently accepting</div>
+          <div style="font-size:0.73rem;color:var(--ink-muted);">new projects for 2025</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label reveal">About AYTIQ Labs</div>
+      <h2 class="reveal reveal-delay-1">A small lab with<br />big ambitions.</h2>
+      <p class="section-desc reveal reveal-delay-2">We're a compact, cross-disciplinary team from India — designers, engineers, and strategists who obsess over craft. We partner with startups and businesses to ship products people love.</p>
+      <div class="about-values">
+        <div class="value-item reveal">
+          <div class="value-icon-wrap">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="value-title">Purpose-Driven</div>
+          <div class="value-desc">Every pixel and line of code serves a reason.</div>
+        </div>
+        <div class="value-item reveal reveal-delay-1">
+          <div class="value-icon-wrap">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <div class="value-title">Detail-Obsessed</div>
+          <div class="value-desc">We sweat the small stuff so you don't have to.</div>
+        </div>
+        <div class="value-item reveal reveal-delay-2">
+          <div class="value-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="value-title">Collaborative</div>
+          <div class="value-desc">Partners, not vendors. Always in your corner.</div>
+        </div>
+        <div class="value-item reveal reveal-delay-3">
+          <div class="value-icon-wrap">
+            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="value-title">Momentum</div>
+          <div class="value-desc">We move fast without breaking what matters.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-label reveal">Our Work</div>
+  <h2 class="reveal reveal-delay-1">Projects we're proud of.</h2>
+  <p class="section-desc reveal reveal-delay-2">From SaaS platforms to mobile apps and AI tools — here's a slice of what we've built.</p>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-thumb thumb-indigo">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-tag">SaaS Platform</span>
+        <div class="project-title">Analytics Dashboard</div>
+        <p class="project-desc">A real-time data visualization platform for e-commerce brands. Helped 3 clients increase decision speed by 60%.</p>
+        <a href="#contact" class="project-link">View details <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg></a>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-thumb thumb-teal">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-tag">Mobile App</span>
+        <div class="project-title">Wellbeing Companion</div>
+        <p class="project-desc">Cross-platform wellness app with habit tracking and personalized nudges. 5,000+ active users at launch.</p>
+        <a href="#contact" class="project-link">View details <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg></a>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-thumb thumb-violet">
+        <svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 0 1 9 9c0 3.5-2 6.5-5 8l-1 3H9l-1-3C5 18.5 3 15.5 3 11a9 9 0 0 1 9-9z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-tag">AI Integration</span>
+        <div class="project-title">Smart Document Engine</div>
+        <p class="project-desc">LLM-powered document extraction and summarization tool for a legal tech client. Saved 40 hrs/week.</p>
+        <a href="#contact" class="project-link">View details <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg></a>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-3">
+      <div class="project-thumb thumb-amber">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-tag">E-Commerce</span>
+        <div class="project-title">Fashion Commerce UI</div>
+        <p class="project-desc">Complete redesign and rebuild of a fashion brand's storefront. Conversion rate up 35% post-launch.</p>
+        <a href="#contact" class="project-link">View details <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-label reveal">The Team</div>
+  <h2 class="reveal reveal-delay-1">Four minds. One lab.</h2>
+  <p class="section-desc reveal reveal-delay-2">A tight-knit group — each of us bringing a different superpower to the table.</p>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-avatar av-bg-a">A</div>
+      <div class="team-name">Tanishq Sonwane</div>
+      <div class="team-role">CO-Founder · Tech Lead</div>
+<p class="team-bio">
+  Builds scalable software and solves complex problems. With experience in full-stack development, he turns ideas into reliable, high-performance applications.
+</p>      <div class="team-socials">
+        <a href="#" class="social-link" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Twitter">
+          <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Dribbble">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-1">
+      <div class="team-avatar av-bg-y">Y</div>
+      <div class="team-name">Ayush Pandey</div>
+<div class="team-role">Co-Founder · Head Of Tech</div>
+<p class="team-bio">
+  Ayush crafts high-performance web and mobile applications. From elegant frontends to robust backends, he enjoys building products that users love.
+</p>      <div class="team-socials">
+        <a href="#" class="social-link" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Twitter">
+          <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-2">
+      <div class="team-avatar av-bg-t">T</div>
+      <div class="team-name">Mohammad Tariq</div>
+      <div class="team-role">Full-Stack Engineer</div>
+      <p class="team-bio">Tariq is the glue between frontend and backend. He turns Figma files into pixel-perfect, performant web experiences at speed.</p>
+      <div class="team-socials">
+        <a href="#" class="social-link" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-3">
+      <div class="team-avatar av-bg-i">I</div>
+      <div class="team-name">Imran Malik</div>
+      <div class="team-role">AI & Product Strategist</div>
+      <p class="team-bio">Imran bridges strategy and technology. He researches, prototypes, and integrates AI features that genuinely make products smarter.</p>
+      <div class="team-socials">
+        <a href="#" class="social-link" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Twitter">
+          <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="exp-layout">
+    <div class="exp-sticky">
+      <div class="section-label reveal">Experience</div>
+      <h2 class="reveal reveal-delay-1">Where we've<br />been.</h2>
+      <p class="reveal reveal-delay-2" style="color:var(--ink-soft);font-size:0.95rem;margin-top:1rem;transition:color 0.35s;">3+ years of building, learning, and shipping. Here's the journey.</p>
+      <div style="margin-top:2rem;">
+        <div class="exp-big-num reveal reveal-delay-3">20<span>+</span></div>
+        <div style="font-size:0.83rem;color:var(--ink-muted);margin-top:0.5rem;transition:color 0.35s;" class="reveal reveal-delay-4">Completed projects across<br />8 industries worldwide</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2022 · The Beginning</div>
+          <div class="timeline-title">AYTIQ Labs Founded</div>
+          <p class="timeline-desc">Four friends with laptops and a shared obsession: build better digital products. We took on our first two freelance clients and shipped in 30 days.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-1">
+        <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2022 · First Milestone</div>
+          <div class="timeline-title">First SaaS Platform Launched</div>
+          <p class="timeline-desc">Designed and built a logistics dashboard for an Indian startup. Went live in 8 weeks — 300 users in the first month.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-2">
+        <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2023 · Growth</div>
+          <div class="timeline-title">Expanded into Mobile & AI</div>
+          <p class="timeline-desc">Shipped 3 mobile apps (iOS + Android) and integrated LLM-powered features into two client products. Revenue grew 3x year-over-year.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-3">
+        <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2024 · Recognition</div>
+          <div class="timeline-title">10+ Active Client Partnerships</div>
+          <p class="timeline-desc">Crossed 10 simultaneous partnerships. Built a design system adopted by 3 clients as their company standard. Won our first international project.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-4">
+        <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2025 · Now</div>
+          <div class="timeline-title">20+ Projects & Growing</div>
+          <p class="timeline-desc">We're now 20+ projects deep, with a thriving remote workflow and a waitlist of clients. Focused on AI-powered products and scalable design systems.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label reveal">Services</div>
+  <h2 class="reveal reveal-delay-1">What we do best.</h2>
+  <p class="section-desc reveal reveal-delay-2">Every engagement is custom — but here's the core of our craft.</p>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <div class="service-title">Product Design</div>
+      <p class="service-desc">UX research, wireframing, prototyping, and high-fidelity UI. We design products that users love from day one.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <div class="service-icon-wrap">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="service-title">Web Development</div>
+      <p class="service-desc">Fast, accessible, and scalable web applications built with modern stacks — React, Next.js, Node, and more.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <div class="service-icon-wrap">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div class="service-title">Mobile Apps</div>
+      <p class="service-desc">Native-feeling cross-platform apps for iOS and Android. We handle everything from MVP to App Store launch.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">04</div>
+      <div class="service-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 019 9c0 3.5-2 6.5-5 8l-1 3H9l-1-3c-3-1.5-5-4.5-5-8a9 9 0 019-9z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div class="service-title">AI Integration</div>
+      <p class="service-desc">Adding intelligence to your product — LLM features, smart automation, recommendation systems, and AI-powered workflows.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div>
+      <div class="section-label reveal">Contact</div>
+      <h2 class="reveal reveal-delay-1">Let's build<br />something great.</h2>
+      <p class="reveal reveal-delay-2" style="color:var(--ink-soft);font-size:1rem;margin-bottom:2.5rem;transition:color 0.35s;">Have a project in mind? Drop us a message — we'll get back within 24 hours.</p>
+      <div class="contact-item reveal reveal-delay-1">
+        <div class="contact-item-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Email</div>
+          <div class="contact-item-value">hello@aytiqlabs.com</div>
+        </div>
+      </div>
+      <div class="contact-item reveal reveal-delay-2">
+        <div class="contact-item-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Location</div>
+          <div class="contact-item-value">Indore, Madhya Pradesh, India</div>
+        </div>
+      </div>
+      <div class="contact-item reveal reveal-delay-3">
+        <div class="contact-item-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Response Time</div>
+          <div class="contact-item-value">Within 24 hours</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="Your name" id="fname" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Last name" id="lname" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" placeholder="you@example.com" id="email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">What are you looking for?</label>
+        <select class="form-select" id="service">
+          <option value="">Select a service</option>
+          <option>Product Design</option>
+          <option>Web Development</option>
+          <option>Mobile App</option>
+          <option>AI Integration</option>
+          <option>Full Product Build</option>
+          <option>Something Else</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tell us about your project</label>
+        <textarea class="form-textarea" placeholder="What are you building? What's the challenge?" id="message"></textarea>
+      </div>
+      <button class="btn-submit" id="submitBtn" type="button">
+        <span id="btnText">Send Message</span>
+        <svg id="sendIcon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+      <div class="success-msg" id="successMsg">
+        <svg class="success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Message sent! We'll be in touch within 24 hours.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <a href="#hero" class="footer-logo">AYTIQ<span>.</span></a>
+      <p class="footer-tagline">A digital product lab building thoughtful, human-centered software from Indore, India.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
-
-      <a href="#contact" class="btn btn--outline nav__cta magnetic">Start a Project</a>
-
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" aria-pressed="false" title="Switch color theme">
-        <!-- Moon icon (shown in dark mode) -->
-        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-        </svg>
-        <!-- Sun icon (shown in light mode) -->
-        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 110 10A5 5 0 0112 7z"/>
-        </svg>
-      </button>
-
-      <button class="nav__hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
     </div>
-  </nav>
-
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <ul class="mobile-menu__links">
-      <li><a href="#home" class="mobile-menu__link" data-page="home">Home</a></li>
-      <li><a href="#about" class="mobile-menu__link" data-page="about">About</a></li>
-      <li><a href="#services" class="mobile-menu__link" data-page="services">Services</a></li>
-      <li><a href="#works" class="mobile-menu__link" data-page="works">Works</a></li>
-      <li><a href="#contact" class="mobile-menu__link" data-page="contact">Contact</a></li>
-    </ul>
-    <div class="mobile-menu__footer">
-      <span>© 2025 AYTIQ Labs</span>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Dribbble</a></li>
+        <li><a href="mailto:hello@aytiqlabs.com">Email Us</a></li>
+      </ul>
     </div>
   </div>
-
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursorFollower"></div>
-
-  <!-- ═══════════════════════════════════════════════
-       PAGE: HOME
-  ═══════════════════════════════════════════════ -->
-  <section class="page page--home active" id="home">
-
-    <!-- Hero -->
-    <section class="hero">
-      <canvas id="heroCanvas"></canvas>
-      <div class="hero__content container">
-        <div class="hero__eyebrow reveal-fade">
-          <span class="dot"></span> Software & AI Agency
-        </div>
-        <h1 class="hero__headline">
-          <span class="split-line">Building</span>
-          <span class="split-line">Intelligent</span>
-          <span class="split-line accent-word">Digital</span>
-          <span class="split-line">Experiences</span>
-        </h1>
-        <p class="hero__sub reveal-fade">
-          AYTIQ Labs creates scalable software, web platforms, AI solutions, and digital products that help businesses grow.
-        </p>
-        <div class="hero__actions reveal-fade">
-          <a href="#contact" class="btn btn--primary magnetic">Start a Project</a>
-          <a href="#works" class="btn btn--ghost magnetic">View Our Work <span class="arrow">→</span></a>
-        </div>
-        <div class="hero__stats reveal-fade">
-          <div class="hero__stat">
-            <strong>50+</strong><span>Projects Delivered</span>
-          </div>
-          <div class="hero__stat">
-            <strong>30+</strong><span>Happy Clients</span>
-          </div>
-          <div class="hero__stat">
-            <strong>5+</strong><span>Years Experience</span>
-          </div>
-        </div>
-      </div>
-      <div class="hero__scroll-hint">
-        <div class="scroll-line"></div>
-        <span>Scroll</span>
-      </div>
-    </section>
-
-    <!-- Trusted By Marquee -->
-    <section class="trusted">
-      <div class="trusted__label container">Trusted by innovative companies</div>
-      <div class="marquee">
-        <div class="marquee__track">
-          <div class="marquee__item">Acme Corp</div>
-          <div class="marquee__item">NovaTech</div>
-          <div class="marquee__item">Helios AI</div>
-          <div class="marquee__item">Quantum IO</div>
-          <div class="marquee__item">Drift Labs</div>
-          <div class="marquee__item">Synapse Co</div>
-          <div class="marquee__item">Vertex Inc</div>
-          <div class="marquee__item">Polaris</div>
-          <!-- Duplicated for seamless loop -->
-          <div class="marquee__item">Acme Corp</div>
-          <div class="marquee__item">NovaTech</div>
-          <div class="marquee__item">Helios AI</div>
-          <div class="marquee__item">Quantum IO</div>
-          <div class="marquee__item">Drift Labs</div>
-          <div class="marquee__item">Synapse Co</div>
-          <div class="marquee__item">Vertex Inc</div>
-          <div class="marquee__item">Polaris</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Services Preview -->
-    <section class="services-preview section-pad">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-eyebrow reveal-fade">What We Build</div>
-          <h2 class="section-title reveal-up">Our Core <br /><em>Capabilities</em></h2>
-        </div>
-        <div class="services-preview__grid">
-          <div class="service-card reveal-up" data-delay="0">
-            <div class="service-card__num">01</div>
-            <div class="service-card__icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="40" height="28" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 44h16M24 36v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 20l5 5-5 5M21 25h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <h3>Web Development</h3>
-            <p>High-performance web platforms engineered for scale, speed, and seamless user experience.</p>
-          </div>
-          <div class="service-card reveal-up" data-delay="0.1">
-            <div class="service-card__num">02</div>
-            <div class="service-card__icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="2" width="20" height="44" rx="4" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="40" r="2" fill="currentColor"/><path d="M18 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <h3>Mobile Apps</h3>
-            <p>Native and cross-platform mobile experiences that users keep coming back to.</p>
-          </div>
-          <div class="service-card reveal-up" data-delay="0.2">
-            <div class="service-card__num">03</div>
-            <div class="service-card__icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="2"/><path d="M24 6v4M24 38v4M6 24h4M38 24h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>
-            </div>
-            <h3>AI Solutions</h3>
-            <p>Custom machine learning models, LLM integrations, and intelligent automation systems.</p>
-          </div>
-          <div class="service-card reveal-up" data-delay="0.3">
-            <div class="service-card__num">04</div>
-            <div class="service-card__icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="14" width="40" height="28" rx="2" stroke="currentColor" stroke-width="2"/><path d="M14 14V10a10 10 0 0120 0v4" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="28" r="4" stroke="currentColor" stroke-width="2"/></svg>
-            </div>
-            <h3>SaaS Development</h3>
-            <p>End-to-end SaaS platforms built with multi-tenancy, billing, and enterprise security.</p>
-          </div>
-        </div>
-        <div class="services-preview__footer reveal-fade">
-          <a href="#services" class="btn btn--outline magnetic">View All Services</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Projects -->
-    <section class="featured-works section-pad">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-eyebrow reveal-fade">Selected Work</div>
-          <h2 class="section-title reveal-up">Projects We're <br /><em>Proud Of</em></h2>
-        </div>
-        <div class="works-grid">
-          <article class="work-item reveal-up" data-delay="0">
-            <div class="work-item__thumb">
-              <div class="work-item__thumb-inner" style="background:#111827"></div>
-              <div class="work-item__overlay">
-                <a href="#works" class="work-item__view">View Case Study →</a>
-              </div>
-              <div class="work-item__tags">
-                <span>AI</span><span>Web</span>
-              </div>
-            </div>
-            <div class="work-item__info">
-              <h3>Helios Analytics</h3>
-              <p>AI-powered business intelligence dashboard for real-time data analysis.</p>
-            </div>
-          </article>
-          <article class="work-item reveal-up" data-delay="0.15">
-            <div class="work-item__thumb">
-              <div class="work-item__thumb-inner" style="background:#0f172a"></div>
-              <div class="work-item__overlay">
-                <a href="#works" class="work-item__view">View Case Study →</a>
-              </div>
-              <div class="work-item__tags">
-                <span>Mobile</span><span>SaaS</span>
-              </div>
-            </div>
-            <div class="work-item__info">
-              <h3>NovaPay Platform</h3>
-              <p>Cross-platform fintech app processing $2M+ in daily transactions.</p>
-            </div>
-          </article>
-          <article class="work-item reveal-up" data-delay="0.3">
-            <div class="work-item__thumb">
-              <div class="work-item__thumb-inner" style="background:#1a1a2e"></div>
-              <div class="work-item__overlay">
-                <a href="#works" class="work-item__view">View Case Study →</a>
-              </div>
-              <div class="work-item__tags">
-                <span>E-Commerce</span><span>UI/UX</span>
-              </div>
-            </div>
-            <div class="work-item__info">
-              <h3>Luxe Commerce</h3>
-              <p>Premium e-commerce ecosystem with personalized AI recommendations.</p>
-            </div>
-          </article>
-        </div>
-        <div class="featured-works__footer reveal-fade">
-          <a href="#works" class="btn btn--outline magnetic">See All Projects</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why Choose Us -->
-    <section class="why-us section-pad">
-      <div class="container">
-        <div class="why-us__grid">
-          <div class="why-us__content">
-            <div class="section-eyebrow reveal-fade">Why AYTIQ Labs</div>
-            <h2 class="section-title reveal-up">Built Different. <br /><em>Delivered Right.</em></h2>
-            <p class="why-us__desc reveal-fade">We don't just write code — we engineer outcomes. Every project is a collaboration between your vision and our technical expertise, resulting in products that outperform expectations.</p>
-            <a href="#about" class="btn btn--outline magnetic reveal-fade">Learn About Us</a>
-          </div>
-          <div class="why-us__pillars">
-            <div class="pillar reveal-up" data-delay="0">
-              <div class="pillar__icon">⚡</div>
-              <h4>Speed Without Compromise</h4>
-              <p>Rapid delivery cycles with zero sacrifice on quality or scalability.</p>
-            </div>
-            <div class="pillar reveal-up" data-delay="0.1">
-              <div class="pillar__icon">🧠</div>
-              <h4>AI-First Thinking</h4>
-              <p>Every solution is designed with intelligent automation built from the ground up.</p>
-            </div>
-            <div class="pillar reveal-up" data-delay="0.2">
-              <div class="pillar__icon">🔒</div>
-              <h4>Enterprise Security</h4>
-              <p>Bank-grade security protocols protecting your data and your users.</p>
-            </div>
-            <div class="pillar reveal-up" data-delay="0.3">
-              <div class="pillar__icon">📈</div>
-              <h4>Growth Oriented</h4>
-              <p>Architecture that scales with your business from MVP to millions of users.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials section-pad">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-eyebrow reveal-fade">Testimonials</div>
-          <h2 class="section-title reveal-up">What Our <br /><em>Clients Say</em></h2>
-        </div>
-        <div class="testimonials__grid">
-          <div class="testimonial reveal-up" data-delay="0">
-            <p>"AYTIQ Labs transformed our data chaos into a beautiful, intelligent dashboard. The AI integration alone saved us 40 hours per week."</p>
-            <div class="testimonial__author">
-              <div class="testimonial__avatar">M</div>
-              <div>
-                <strong>Marcus Chen</strong>
-                <span>CTO, Helios Analytics</span>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial reveal-up" data-delay="0.15">
-            <p>"The NovaPay mobile app exceeded every metric we set. The team's attention to UX detail and backend performance is world-class."</p>
-            <div class="testimonial__author">
-              <div class="testimonial__avatar">S</div>
-              <div>
-                <strong>Sarah Okafor</strong>
-                <span>CEO, NovaPay</span>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial reveal-up" data-delay="0.3">
-            <p>"Working with AYTIQ Labs felt like having a co-founder who was also a 10x engineer. They truly understand product, not just code."</p>
-            <div class="testimonial__author">
-              <div class="testimonial__avatar">J</div>
-              <div>
-                <strong>James Whitfield</strong>
-                <span>Founder, Luxe Commerce</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="final-cta section-pad">
-      <div class="container">
-        <div class="final-cta__box reveal-up">
-          <div class="section-eyebrow">Ready to Build?</div>
-          <h2>Let's Create Something<br /><em>Extraordinary</em></h2>
-          <p>Share your vision with us. We'll respond within 24 hours.</p>
-          <a href="#contact" class="btn btn--primary magnetic">Start a Project Today</a>
-        </div>
-      </div>
-    </section>
-
-  </section>
-  <!-- END HOME -->
-
-
-  <!-- ═══════════════════════════════════════════════
-       PAGE: ABOUT
-  ═══════════════════════════════════════════════ -->
-  <section class="page page--about" id="about">
-
-    <!-- Page Hero -->
-    <section class="page-hero">
-      <div class="container">
-        <div class="page-hero__eyebrow reveal-fade">About AYTIQ Labs</div>
-        <h1 class="page-hero__title reveal-up">We Engineer <br /><em>the Future</em></h1>
-        <p class="page-hero__sub reveal-fade">Founded on the belief that great software changes lives — we build with intention, precision, and an obsessive commitment to quality.</p>
-      </div>
-    </section>
-
-    <!-- Story -->
-    <section class="story section-pad">
-      <div class="container">
-        <div class="story__grid">
-          <div class="story__content">
-            <div class="section-eyebrow reveal-fade">Our Story</div>
-            <h2 class="section-title reveal-up">From a Vision to <br /><em>a Studio</em></h2>
-            <p class="reveal-fade">AYTIQ Labs was born from a simple frustration: too many businesses were being failed by software agencies that overpromised and underdelivered. We set out to be different — a team that treats every product like it's our own startup.</p>
-            <p class="reveal-fade">Today, we're a lean team of engineers, designers, and AI specialists who have shipped products used by hundreds of thousands of people worldwide. We pick projects we believe in, and we make them exceptional.</p>
-          </div>
-          <div class="story__visual reveal-up">
-            <div class="story__visual-inner">
-              <div class="story__stat-block">
-                <strong class="counter" data-target="50">0</strong>+
-                <span>Projects Shipped</span>
-              </div>
-              <div class="story__stat-block">
-                <strong class="counter" data-target="30">0</strong>+
-                <span>Global Clients</span>
-              </div>
-              <div class="story__stat-block">
-                <strong class="counter" data-target="5">0</strong>+
-                <span>Years Building</span>
-              </div>
-              <div class="story__stat-block">
-                <strong class="counter" data-target="99">0</strong>%
-                <span>Client Retention</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Founders -->
-    <section class="founders section-pad">
-      <div class="container">
-        <div class="founders__intro section-header">
-          <div>
-            <div class="section-eyebrow reveal-fade">The Minds Behind AYTIQ</div>
-            <h2 class="section-title reveal-up">Three builders. One shared<br /><em>standard for great work.</em></h2>
-          </div>
-          <p class="reveal-fade">We stay close to every engagement—leading strategy, shaping the product, and making sure the work delivers more than a polished surface.</p>
-        </div>
-        <div class="founders__grid">
-          <article class="founder-profile reveal-up" data-delay="0">
-            <div class="founder-profile__portrait">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Ayaan Khan, Co-founder and Technology Lead at AYTIQ Labs" loading="lazy" width="1000" height="1200" />
-              <span class="founder-profile__index">01 / 03</span>
-              <a class="founder-profile__link" href="#contact" aria-label="Start a conversation with Ayaan">↗</a>
-            </div>
-            <div class="founder-profile__overlay">
-              <span class="founder-profile__role">Co-founder · Technology</span>
-              <h3>Ayaan Khan</h3>
-              <p>Architecting reliable digital products and intelligent systems that turn bold ideas into scalable businesses.</p>
-            </div>
-          </article>
-          <article class="founder-profile reveal-up" data-delay="0.15">
-            <div class="founder-profile__portrait">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Rehan Malik, Co-founder and Creative Lead at AYTIQ Labs" loading="lazy" width="1000" height="1200" />
-              <span class="founder-profile__index">02 / 03</span>
-              <a class="founder-profile__link" href="#contact" aria-label="Start a conversation with Rehan">↗</a>
-            </div>
-            <div class="founder-profile__overlay">
-              <span class="founder-profile__role">Co-founder · Creative</span>
-              <h3>Rehan Malik</h3>
-              <p>Shaping distinctive brands and intuitive digital experiences where every detail has a clear purpose.</p>
-            </div>
-          </article>
-          <article class="founder-profile reveal-up" data-delay="0.3">
-            <div class="founder-profile__portrait">
-              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Kabir Mehta, Co-founder and Growth Lead at AYTIQ Labs" loading="lazy" width="1000" height="1200" />
-              <span class="founder-profile__index">03 / 03</span>
-              <a class="founder-profile__link" href="#contact" aria-label="Start a conversation with Kabir">↗</a>
-            </div>
-            <div class="founder-profile__overlay">
-              <span class="founder-profile__role">Co-founder · Growth</span>
-              <h3>Kabir Mehta</h3>
-              <p>Connecting product strategy with market opportunity to build partnerships and create sustainable business growth.</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Mission & Vision -->
-    <section class="mission section-pad">
-      <div class="container">
-        <div class="mission__grid">
-          <div class="mission__card reveal-up" data-delay="0">
-            <div class="mission__label">Mission</div>
-            <h3>To make world-class software accessible to every ambitious business, regardless of size.</h3>
-            <p>We close the gap between enterprise technology and growing companies by delivering precision-engineered digital products.</p>
-          </div>
-          <div class="mission__card reveal-up" data-delay="0.2">
-            <div class="mission__label">Vision</div>
-            <h3>A world where every great idea has the technology it deserves to reach its potential.</h3>
-            <p>We envision becoming the trusted technology backbone for the next generation of category-defining companies.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Core Values -->
-    <section class="values section-pad">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-eyebrow reveal-fade">What Drives Us</div>
-          <h2 class="section-title reveal-up">Core <em>Values</em></h2>
-        </div>
-        <div class="values__grid">
-          <div class="value-item reveal-up" data-delay="0"><span class="value-item__num">01</span><h4>Craftsmanship</h4><p>We take pride in every pixel and every line of code.</p></div>
-          <div class="value-item reveal-up" data-delay="0.1"><span class="value-item__num">02</span><h4>Transparency</h4><p>No surprises. Honest communication from day one.</p></div>
-          <div class="value-item reveal-up" data-delay="0.2"><span class="value-item__num">03</span><h4>Innovation</h4><p>We challenge defaults and push for better solutions.</p></div>
-          <div class="value-item reveal-up" data-delay="0.3"><span class="value-item__num">04</span><h4>Partnership</h4><p>Your success is the only metric that matters to us.</p></div>
-          <div class="value-item reveal-up" data-delay="0.4"><span class="value-item__num">05</span><h4>Ownership</h4><p>We treat your product like it's ours — because in spirit, it is.</p></div>
-          <div class="value-item reveal-up" data-delay="0.5"><span class="value-item__num">06</span><h4>Speed</h4><p>Rapid iteration without cutting corners on quality.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tech Stack -->
-    <section class="tech-stack section-pad">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-eyebrow reveal-fade">Technology</div>
-          <h2 class="section-title reveal-up">Our <em>Expertise</em></h2>
-        </div>
-        <div class="tech__categories">
-          <div class="tech__category reveal-up" data-delay="0">
-            <h4>Frontend</h4>
-            <div class="tech__tags">
-              <span>React</span><span>Next.js</span><span>Vue</span><span>TypeScript</span><span>Three.js</span>
-            </div>
-          </div>
-          <div class="tech__category reveal-up" data-delay="0.1">
-            <h4>Backend</h4>
-            <div class="tech__tags">
-              <span>Node.js</span><span>Python</span><span>Go</span><span>GraphQL</span><span>REST</span>
-            </div>
-          </div>
-          <div class="tech__category reveal-up" data-delay="0.2">
-            <h4>Mobile</h4>
-            <div class="tech__tags">
-              <span>React Native</span><span>Flutter</span><span>Swift</span><span>Kotlin</span>
-            </div>
-          </div>
-          <div class="tech__category reveal-up" data-delay="0.3">
-            <h4>AI / ML</h4>
-            <div class="tech__tags">
-              <span>PyTorch</span><span>TensorFlow</span><span>OpenAI</span><span>LangChain</span><span>Hugging Face</span>
-            </div>
-          </div>
-          <div class="tech__category reveal-up" data-delay="0.4">
-            <h4>Cloud / DevOps</h4>
-            <div class="tech__tags">
-              <span>AWS</span><span>GCP</span><span>Azure</span><span>Docker</span><span>Kubernetes</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </section>
-  <!-- END ABOUT -->
-
-
-  <!-- ═══════════════════════════════════════════════
-       PAGE: SERVICES
-  ═══════════════════════════════════════════════ -->
-  <section class="page page--services" id="services">
-
-    <section class="page-hero">
-      <div class="container">
-        <div class="page-hero__eyebrow reveal-fade">What We Offer</div>
-        <h1 class="page-hero__title reveal-up">Services Built for <br /><em>Real Impact</em></h1>
-        <p class="page-hero__sub reveal-fade">From concept to deployment — every capability you need under one roof.</p>
-      </div>
-    </section>
-
-    <section class="services-full section-pad">
-      <div class="container">
-        <div class="services-full__grid">
-
-          <div class="svc-card reveal-up" data-delay="0">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="40" height="28" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 44h16M24 36v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 20l5 5-5 5M21 25h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-              <h3>Web Development</h3>
-            </div>
-            <p>We architect and build high-performance web applications — from marketing sites to complex SaaS dashboards. React, Next.js, or whatever your stack demands.</p>
-            <ul class="svc-card__list">
-              <li>Custom Web Applications</li>
-              <li>Progressive Web Apps (PWA)</li>
-              <li>Web Performance Optimization</li>
-              <li>CMS Integration</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.1">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="2" width="20" height="44" rx="4" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="40" r="2" fill="currentColor"/><path d="M18 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              </div>
-              <h3>Mobile App Development</h3>
-            </div>
-            <p>Cross-platform and native mobile applications engineered for performance, designed for delight. iOS and Android, built to App Store standards.</p>
-            <ul class="svc-card__list">
-              <li>React Native & Flutter Apps</li>
-              <li>iOS (Swift) Development</li>
-              <li>Android (Kotlin) Development</li>
-              <li>App Store Submission & Optimization</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.2">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 36L24 8l18 28H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M24 22v8M24 34v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              </div>
-              <h3>UI/UX Design</h3>
-            </div>
-            <p>Interfaces that feel inevitable — intuitive, beautiful, and aligned with your business goals. Research-backed design that converts and retains users.</p>
-            <ul class="svc-card__list">
-              <li>User Research & Strategy</li>
-              <li>Wireframing & Prototyping</li>
-              <li>Design Systems</li>
-              <li>Usability Testing</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.3">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="2"/><path d="M24 6v4M24 38v4M6 24h4M38 24h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>
-              </div>
-              <h3>AI Solutions</h3>
-            </div>
-            <p>Integrate intelligence into your business with custom ML models, LLM-powered features, and automation pipelines that actually work in production.</p>
-            <ul class="svc-card__list">
-              <li>Custom ML Model Development</li>
-              <li>LLM Integration (GPT, Claude)</li>
-              <li>Computer Vision Systems</li>
-              <li>AI-Powered Automation</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.4">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="14" width="40" height="28" rx="2" stroke="currentColor" stroke-width="2"/><path d="M14 14V10a10 10 0 0120 0v4" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="28" r="4" stroke="currentColor" stroke-width="2"/></svg>
-              </div>
-              <h3>SaaS Development</h3>
-            </div>
-            <p>We build subscription software businesses from scratch — multi-tenant architecture, Stripe billing, role-based access, and everything that makes SaaS work.</p>
-            <ul class="svc-card__list">
-              <li>Multi-Tenant Architecture</li>
-              <li>Subscription & Billing Systems</li>
-              <li>Admin Dashboards & Analytics</li>
-              <li>Onboarding & Retention Features</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.5">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 4L4 14v10c0 11 9 20 20 22 11-2 20-11 20-22V14L24 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 24l5 5 11-11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-              <h3>Cloud Solutions</h3>
-            </div>
-            <p>Modern cloud infrastructure designed for reliability, security, and cost efficiency. We architect, migrate, and manage your cloud estate.</p>
-            <ul class="svc-card__list">
-              <li>Cloud Architecture & Migration</li>
-              <li>Serverless & Microservices</li>
-              <li>CI/CD Pipeline Setup</li>
-              <li>Monitoring & Cost Optimization</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.6">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="10" width="40" height="28" rx="2" stroke="currentColor" stroke-width="2"/><path d="M14 22h6v6h-6zM22 30h12M22 22h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              </div>
-              <h3>E-Commerce Development</h3>
-            </div>
-            <p>Revenue-optimized e-commerce systems with seamless checkout, AI recommendations, inventory management, and conversion-focused UX.</p>
-            <ul class="svc-card__list">
-              <li>Custom E-Commerce Platforms</li>
-              <li>Shopify & WooCommerce</li>
-              <li>Payment Gateway Integration</li>
-              <li>AI Product Recommendations</li>
-            </ul>
-          </div>
-
-          <div class="svc-card reveal-up" data-delay="0.7">
-            <div class="svc-card__header">
-              <div class="svc-card__icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="24" r="4" stroke="currentColor" stroke-width="2"/><circle cx="36" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="36" cy="36" r="4" stroke="currentColor" stroke-width="2"/><path d="M16 22l16-8M16 26l16 8" stroke="currentColor" stroke-width="2"/></svg>
-              </div>
-              <h3>API Development</h3>
-            </div>
-            <p>Robust, well-documented RESTful and GraphQL APIs that power your ecosystem. Built for performance, security, and developer experience.</p>
-            <ul class="svc-card__list">
-              <li>REST & GraphQL API Design</li>
-              <li>Third-Party Integrations</li>
-              <li>API Security & Rate Limiting</li>
-              <li>Developer Documentation</li>
-            </ul>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Process -->
-    <section class="process section-pad">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-eyebrow reveal-fade">How We Work</div>
-          <h2 class="section-title reveal-up">Our <em>Process</em></h2>
-        </div>
-        <div class="process__steps">
-          <div class="process__step reveal-up" data-delay="0">
-            <div class="process__step-num">01</div>
-            <h4>Discovery</h4>
-            <p>We listen before we build. Deep-dive into your goals, users, and constraints.</p>
-          </div>
-          <div class="process__connector reveal-fade"></div>
-          <div class="process__step reveal-up" data-delay="0.15">
-            <div class="process__step-num">02</div>
-            <h4>Strategy</h4>
-            <p>Technical architecture, design direction, and project roadmap defined upfront.</p>
-          </div>
-          <div class="process__connector reveal-fade"></div>
-          <div class="process__step reveal-up" data-delay="0.3">
-            <div class="process__step-num">03</div>
-            <h4>Build</h4>
-            <p>Agile sprints with weekly demos. You see progress from day one.</p>
-          </div>
-          <div class="process__connector reveal-fade"></div>
-          <div class="process__step reveal-up" data-delay="0.45">
-            <div class="process__step-num">04</div>
-            <h4>Launch</h4>
-            <p>Rigorous QA, performance testing, and smooth deployment to production.</p>
-          </div>
-          <div class="process__connector reveal-fade"></div>
-          <div class="process__step reveal-up" data-delay="0.6">
-            <div class="process__step-num">05</div>
-            <h4>Grow</h4>
-            <p>Post-launch support, monitoring, and iterative improvement as you scale.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </section>
-  <!-- END SERVICES -->
-
-
-  <!-- ═══════════════════════════════════════════════
-       PAGE: WORKS
-  ═══════════════════════════════════════════════ -->
-  <section class="page page--works" id="works">
-
-    <section class="page-hero">
-      <div class="container">
-        <div class="page-hero__eyebrow reveal-fade">Portfolio</div>
-        <h1 class="page-hero__title reveal-up">Work That <br /><em>Speaks</em></h1>
-        <p class="page-hero__sub reveal-fade">A curated selection of projects where design meets engineering excellence.</p>
-      </div>
-    </section>
-
-    <!-- Filter -->
-    <section class="portfolio-section section-pad">
-      <div class="container">
-        <div class="portfolio-filter reveal-fade">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="web">Web</button>
-          <button class="filter-btn" data-filter="mobile">Mobile</button>
-          <button class="filter-btn" data-filter="ai">AI</button>
-          <button class="filter-btn" data-filter="saas">SaaS</button>
-        </div>
-
-        <div class="portfolio-grid">
-
-          <article class="portfolio-item reveal-up" data-delay="0" data-category="ai web">
-            <div class="portfolio-item__thumb">
-              <div class="portfolio-item__bg" style="background:#0f172a"></div>
-              <div class="portfolio-item__overlay">
-                <button class="portfolio-item__open magnetic" data-project="helios">
-                  View Project <span>→</span>
-                </button>
-              </div>
-              <div class="portfolio-item__tags"><span>AI</span><span>Web</span></div>
-            </div>
-            <div class="portfolio-item__info">
-              <h3>Helios Analytics</h3>
-              <p>AI-powered BI dashboard for real-time enterprise data intelligence</p>
-            </div>
-          </article>
-
-          <article class="portfolio-item reveal-up" data-delay="0.1" data-category="mobile saas">
-            <div class="portfolio-item__thumb">
-              <div class="portfolio-item__bg" style="background:#111827"></div>
-              <div class="portfolio-item__overlay">
-                <button class="portfolio-item__open magnetic" data-project="novapay">
-                  View Project <span>→</span>
-                </button>
-              </div>
-              <div class="portfolio-item__tags"><span>Mobile</span><span>SaaS</span></div>
-            </div>
-            <div class="portfolio-item__info">
-              <h3>NovaPay Platform</h3>
-              <p>Cross-platform fintech application with $2M+ daily transactions</p>
-            </div>
-          </article>
-
-          <article class="portfolio-item reveal-up" data-delay="0.2" data-category="web">
-            <div class="portfolio-item__thumb">
-              <div class="portfolio-item__bg" style="background:#1a1a2e"></div>
-              <div class="portfolio-item__overlay">
-                <button class="portfolio-item__open magnetic" data-project="luxe">
-                  View Project <span>→</span>
-                </button>
-              </div>
-              <div class="portfolio-item__tags"><span>E-Commerce</span><span>UI/UX</span></div>
-            </div>
-            <div class="portfolio-item__info">
-              <h3>Luxe Commerce</h3>
-              <p>Premium e-commerce ecosystem with AI-driven personalization</p>
-            </div>
-          </article>
-
-          <article class="portfolio-item reveal-up" data-delay="0.3" data-category="ai saas">
-            <div class="portfolio-item__thumb">
-              <div class="portfolio-item__bg" style="background:#18181b"></div>
-              <div class="portfolio-item__overlay">
-                <button class="portfolio-item__open magnetic" data-project="synapse">
-                  View Project <span>→</span>
-                </button>
-              </div>
-              <div class="portfolio-item__tags"><span>AI</span><span>SaaS</span></div>
-            </div>
-            <div class="portfolio-item__info">
-              <h3>Synapse CRM</h3>
-              <p>Intelligent CRM with predictive lead scoring and automated workflows</p>
-            </div>
-          </article>
-
-          <article class="portfolio-item reveal-up" data-delay="0.4" data-category="mobile">
-            <div class="portfolio-item__thumb">
-              <div class="portfolio-item__bg" style="background:#1c1917"></div>
-              <div class="portfolio-item__overlay">
-                <button class="portfolio-item__open magnetic" data-project="pulse">
-                  View Project <span>→</span>
-                </button>
-              </div>
-              <div class="portfolio-item__tags"><span>Mobile</span><span>Health</span></div>
-            </div>
-            <div class="portfolio-item__info">
-              <h3>Pulse Health</h3>
-              <p>Real-time health monitoring app with 200K+ active users</p>
-            </div>
-          </article>
-
-          <article class="portfolio-item reveal-up" data-delay="0.5" data-category="web saas">
-            <div class="portfolio-item__thumb">
-              <div class="portfolio-item__bg" style="background:#14162c"></div>
-              <div class="portfolio-item__overlay">
-                <button class="portfolio-item__open magnetic" data-project="quantum">
-                  View Project <span>→</span>
-                </button>
-              </div>
-              <div class="portfolio-item__tags"><span>SaaS</span><span>Web</span></div>
-            </div>
-            <div class="portfolio-item__info">
-              <h3>Quantum DevOps</h3>
-              <p>Full-stack DevOps platform reducing deployment times by 70%</p>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-  </section>
-  <!-- END WORKS -->
-
-
-  <!-- ═══════════════════════════════════════════════
-       PAGE: CONTACT
-  ═══════════════════════════════════════════════ -->
-  <section class="page page--contact" id="contact">
-
-    <section class="page-hero">
-      <div class="container">
-        <div class="page-hero__eyebrow reveal-fade">Get In Touch</div>
-        <h1 class="page-hero__title reveal-up">Let's Build <br /><em>Together</em></h1>
-        <p class="page-hero__sub reveal-fade">Tell us about your project. We read every message and respond within 24 hours.</p>
-      </div>
-    </section>
-
-    <section class="contact-section section-pad">
-      <div class="container">
-        <div class="contact-grid">
-
-          <!-- Form -->
-          <div class="contact-form-wrap reveal-up">
-            <form class="contact-form" id="contactForm" novalidate>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="name">Full Name *</label>
-                  <input type="text" id="name" name="name" placeholder="John Smith" required />
-                </div>
-                <div class="form-group">
-                  <label for="email">Email Address *</label>
-                  <input type="email" id="email" name="email" placeholder="john@company.com" required />
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="company">Company</label>
-                <input type="text" id="company" name="company" placeholder="Acme Corp" />
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="project">Project Type *</label>
-                  <select id="project" name="project" required>
-                    <option value="" disabled selected>Select a service</option>
-                    <option value="web">Web Development</option>
-                    <option value="mobile">Mobile App</option>
-                    <option value="ai">AI Solution</option>
-                    <option value="saas">SaaS Development</option>
-                    <option value="design">UI/UX Design</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="budget">Budget Range</label>
-                  <select id="budget" name="budget">
-                    <option value="" disabled selected>Select budget</option>
-                    <option value="5-15k">$5k – $15k</option>
-                    <option value="15-50k">$15k – $50k</option>
-                    <option value="50-100k">$50k – $100k</option>
-                    <option value="100k+">$100k+</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="message">Message *</label>
-                <textarea id="message" name="message" placeholder="Tell us about your project, goals, and timeline..." rows="5" required></textarea>
-              </div>
-              <button type="submit" class="btn btn--primary magnetic form-submit">
-                <span class="btn-text">Send Message</span>
-                <span class="btn-loader" style="display:none">Sending...</span>
-              </button>
-            </form>
-            <div class="form-success" id="formSuccess" style="display:none">
-              <div class="form-success__icon">✓</div>
-              <h3>Message Sent!</h3>
-              <p>Thanks for reaching out. We'll be in touch within 24 hours.</p>
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="contact-info reveal-up" style="--delay:0.2s">
-            <div class="contact-info__block">
-              <div class="contact-info__label">Email Us</div>
-              <a href="mailto:hello@aytiqlabs.com" class="contact-info__value">hello@aytiqlabs.com</a>
-            </div>
-            <div class="contact-info__block">
-              <div class="contact-info__label">Call Us</div>
-              <a href="tel:+15551234567" class="contact-info__value">+1 (555) 123-4567</a>
-            </div>
-            <div class="contact-info__block">
-              <div class="contact-info__label">Office</div>
-              <p class="contact-info__value">100 Tech Plaza, Suite 400<br />San Francisco, CA 94105</p>
-            </div>
-            <div class="contact-info__block">
-              <div class="contact-info__label">Follow Us</div>
-              <div class="social-links">
-                <a href="#" class="social-link">Twitter</a>
-                <a href="#" class="social-link">LinkedIn</a>
-                <a href="#" class="social-link">GitHub</a>
-                <a href="#" class="social-link">Dribbble</a>
-              </div>
-            </div>
-            <div class="availability-badge">
-              <span class="availability-dot"></span>
-              Currently accepting new projects
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </section>
-  <!-- END CONTACT -->
-
-
-  <!-- ═══════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <a href="#home" class="nav__logo">
-            <span class="nav__logo-mark">AY</span>
-            <span class="nav__logo-text">TIQ Labs</span>
-          </a>
-          <p>Building intelligent digital experiences for businesses that demand excellence.</p>
-          <div class="social-links">
-            <a href="#" class="social-link">TW</a>
-            <a href="#" class="social-link">LI</a>
-            <a href="#" class="social-link">GH</a>
-            <a href="#" class="social-link">DR</a>
-          </div>
-        </div>
-        <div class="footer__nav">
-          <div class="footer__nav-group">
-            <h5>Company</h5>
-            <ul>
-              <li><a href="#home">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#works">Works</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div>
-          <div class="footer__nav-group">
-            <h5>Services</h5>
-            <ul>
-              <li><a href="#services">Web Development</a></li>
-              <li><a href="#services">Mobile Apps</a></li>
-              <li><a href="#services">AI Solutions</a></li>
-              <li><a href="#services">SaaS Development</a></li>
-              <li><a href="#services">UI/UX Design</a></li>
-            </ul>
-          </div>
-          <div class="footer__nav-group">
-            <h5>Contact</h5>
-            <ul>
-              <li><a href="mailto:hello@aytiqlabs.com">hello@aytiqlabs.com</a></li>
-              <li><a href="tel:+15551234567">+1 (555) 123-4567</a></li>
-              <li>San Francisco, CA</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer__bottom">
-        <span>© 2025 AYTIQ Labs. All rights reserved.</span>
-        <span>Crafted with precision & care.</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Project Modal -->
-  <div class="modal" id="projectModal">
-    <div class="modal__overlay" id="modalOverlay"></div>
-    <div class="modal__content">
-      <button class="modal__close" id="modalClose">×</button>
-      <div class="modal__body" id="modalBody"></div>
-    </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 AYTIQ Labs. All rights reserved.</span>
+    <span>Crafted in Indore, India</span>
   </div>
+</footer>
 
-  <script src="script.js"></script>
+<script>
+  // ── LENIS SMOOTH SCROLL
+  const lenis = new Lenis({
+    duration: 1.25,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothTouch: false,
+    touchMultiplier: 2,
+  });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+
+  // Anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { lenis.scrollTo(t, { offset: -64, duration: 1.4 }); document.getElementById('mobileMenu').classList.remove('open'); }
+    });
+  });
+
+  // Progress bar
+  lenis.on('scroll', ({ progress }) => {
+    document.getElementById('scrollProgress').style.width = (progress * 100) + '%';
+  });
+
+  // Nav scroll class
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  // Hamburger
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
+
+  // Reveal on scroll
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── THEME TOGGLE
+  const html = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('aytiq-theme');
+  if (saved) html.setAttribute('data-theme', saved);
+
+  toggleBtn.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('aytiq-theme', next);
+  });
+
+  // ── CONTACT FORM
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const successMsg = document.getElementById('successMsg');
+  const sendIcon = document.getElementById('sendIcon');
+
+  submitBtn.addEventListener('click', () => {
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if (!fname || !email || !message) {
+      submitBtn.style.background = '#ef4444';
+      btnText.textContent = 'Please fill required fields';
+      setTimeout(() => { submitBtn.style.background = ''; btnText.textContent = 'Send Message'; }, 2200);
+      return;
+    }
+
+    btnText.textContent = 'Sending...';
+    sendIcon.style.display = 'none';
+    submitBtn.disabled = true;
+
+    setTimeout(() => {
+      btnText.textContent = 'Message Sent';
+      submitBtn.style.background = '#16a34a';
+      successMsg.classList.add('show');
+      ['fname','lname','email','service','message'].forEach(id => document.getElementById(id).value = '');
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Send Message';
+        submitBtn.style.background = '';
+        sendIcon.style.display = '';
+      }, 4000);
+    }, 1300);
+  });
+</script>
 </body>
 </html>
